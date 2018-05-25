@@ -1,0 +1,10 @@
+---
+applications:
+  - name: spring-testing
+    buildpack: java_buildpack
+    path: build/libs/spring-testing-0.0.1-SNAPSHOT.jar
+    services:
+      - db-storage
+    instances: 2
+    env:
+       weather.api_secret: INSERT_API_KEY_HERE

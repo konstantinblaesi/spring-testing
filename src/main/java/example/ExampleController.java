@@ -5,6 +5,7 @@ import example.person.PersonRepository;
 import example.weather.WeatherClient;
 import example.weather.WeatherResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,11 +17,18 @@ public class ExampleController {
 
     private final PersonRepository personRepository;
     private final WeatherClient weatherClient;
+    @Autowired
+    private Environment environment;
 
     @Autowired
     public ExampleController(final PersonRepository personRepository, final WeatherClient weatherClient) {
         this.personRepository = personRepository;
         this.weatherClient = weatherClient;
+    }
+
+    @GetMapping("/")
+    public String index() {
+        return hello();
     }
 
     @GetMapping("/hello")
@@ -42,5 +50,10 @@ public class ExampleController {
         return weatherClient.fetchWeather()
                 .map(WeatherResponse::getSummary)
                 .orElse("Sorry, I couldn't fetch the weather for you :(");
+    }
+
+    @GetMapping("/instance")
+    public String instance() {
+        return environment.getRequiredProperty("CF_INSTANCE_INDEX");
     }
 }
